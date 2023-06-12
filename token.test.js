@@ -37,4 +37,17 @@ describe("Token", function () {
         expect((await token.balanceOf(signers[3].address)).toNumber()).to.equal(5);
     });
 
+    it("test transferfrom", async function () {
+        console.log('token deployed at:'+ token.address);
+        const tx = await token.connect(signers[1]).mint(signers[2].address);
+        await tx.wait();
+        const approval = await token.connect(signers[2]).approve(signers[1].address, 5);
+        await approval.wait();
+        const transferredFrom = await token.connect(signers[1]).transferFrom(signers[2].address, signers[3].address, 5);
+        await transferredFrom.wait();
+        expect((await token.balanceOf(signers[2].address)).toNumber()).to.equal(5);
+        expect((await token.balanceOf(signers[3].address)).toNumber()).to.equal(5);
+
+    });
+
 });
